@@ -9,8 +9,6 @@ from sklearn.model_selection import train_test_split
 
 import pytorch_lightning as pl
 from torch.utils.data import ConcatDataset, DataLoader, Dataset, random_split
-from torchvision.datasets import MNIST
-from torchvision.transforms import transforms as T
 
 
 def load_audio(full_path, sampling_rate=16000):
@@ -228,7 +226,7 @@ class PasrDataModule(pl.LightningDataModule):
 
 
 if __name__ == "__main__":
-    dm = MNISTDataModule()
+    dm = PasrDataModule()
     dm.prepare_data()
     dm.setup()
     for batch in dm.train_dataloader():
