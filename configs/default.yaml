@@ -25,7 +25,7 @@ trainer:
 
   # Device https://lightning.ai/docs/pytorch/stable/common/trainer.html#accelerator
   accelerator: gpu # "cpu", "gpu", "tpu", "ipu", "auto"
-  devices: 1 # "2," for device id 2
+  devices: 0 # "2," for device id 2
   num_nodes: 1 # https://lightning.ai/docs/pytorch/stable/common/trainer.html#num-nodes
 
   # Distributed
@@ -40,7 +40,7 @@ trainer:
     class_path: WandbLogger
     init_args:
       save_dir: logs
-      project: mnist
+      project: xarts
       log_model: false
   log_every_n_steps: 50
 

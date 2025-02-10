@@ -4,9 +4,16 @@ matplotlib
 pandas
 scipy
 ipykernel
+librosa
+resampy
+pyloudnorm
+scikit-learn
+onnxruntime
+pandas
+seaborn
 
 # --------- pytorch --------- #
-# torch
+torch
 # torchaudio
 # torchvision
 pytorch-lightning
@@ -14,7 +21,7 @@ jsonargparse[signatures]
 torchmetrics
 
 # --------- loggers --------- #
-# tensorboard
+tensorboard
 wandb
 # neptune-client
 # mlflow
