@@ -1,12 +1,15 @@
-from torch.nn import Conv1d
-from torch.nn.utils import weight_norm, get_padding, remove_weight_norm
+import torch.nn as nn
+from torch.nn.utils.parametrizations import weight_norm
+from torch.nn.utils import remove_weight_norm
+
+from src.models.utils import get_padding
 
 
-class LookaheadBlock(torch.nn.Module):
+class LookaheadBlock(nn.Module):
     def __init__(self, in_channel, kernel_size):
         super(LookaheadBlock, self).__init__()
         self.in_channel = in_channel
-        self.layer = weight_norm(Conv1d(in_channel, in_channel, kernel_size, 1, get_padding(kernel_size, 1)))
+        self.layer = weight_norm(nn.Conv1d(in_channel, in_channel, kernel_size, 1, get_padding(kernel_size, 1)))
         self.activation = nn.SiLU()
         self.layer_norm = nn.LayerNorm(in_channel)
     

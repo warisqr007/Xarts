@@ -2,9 +2,9 @@ import torch
 import torch.nn.functional as F
 import torch.nn as nn
 from torch.nn import Conv1d
-from torch.nn.utils import weight_norm, remove_weight_norm, get_padding
+from torch.nn.utils import weight_norm, remove_weight_norm
 
-from src.models.utils import init_weights
+from src.models.utils import init_weights, get_padding
 from src.models.components.causal_conv import CausalConv
 from src.models.components.causal_resblock import ResBlock
 from src.models.components.fast_glu import FastGLU
@@ -93,12 +93,16 @@ class HiFiEncoder(torch.nn.Module):
         # post conv buff
         x, post_conv_buf = self.conv_post(x, post_conv_buf)
         # x = torch.tanh(x)
+        # print("post conv shape", x.shape)
         z_embed = self.final_act(x.transpose(1, 2)).transpose(1, 2)
 
+        # print("z_embed shape", z_embed.shape)
         if hasattr(self, 'lookahead'):
             z_embed = self.lookahead(z_embed)
+            # print("lookahead z_embed shape", z_embed.shape)
 
         code = self.code_predictor(z_embed.transpose(1, 2)).transpose(1, 2)
+        # print("code shape", code.shape)
         
         buffers = pre_conv_buf, res_buf, down_buf, post_conv_buf
         return code, z_embed, buffers

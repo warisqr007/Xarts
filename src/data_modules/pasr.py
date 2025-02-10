@@ -126,10 +126,13 @@ class PasrDataModule(pl.LightningDataModule):
     def __init__(
         self,
         data_dir: str = "data",
-        train_val_test_split: tuple[int, int, int] = (55_000, 5_000, 10_000),
-        batch_size: int = 64,
-        num_workers: int = 0,
-        pin_memory: bool = False,
+        batch_size: int = 16,
+        num_workers: int = 4,
+        pin_memory: bool = True,
+        segment_size: int = 20480,
+        code_hop_size: int = 320,
+        sampling_rate: int = 16000,
+        split: bool = True,
     ):
         super().__init__()
 

@@ -8,7 +8,7 @@ model:
     resblock_dilation_sizes: [[1,3,5], [1,3,5], [1,3,5]]
     num_codes: 200
     upsample_initial_channel: 512
-    lookahead: 5
+    lookahead: 15
 # https://pytorch.org/docs/stable/optim.html
 optimizer:
   class_path: AdamW

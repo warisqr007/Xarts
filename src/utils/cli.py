@@ -86,8 +86,10 @@ class CustomLightningCLI(LightningCLI):
         parser.add_argument("--ignore_warnings", default=False, type=bool, help="Ignore warnings")
         parser.add_argument("--git_commit_before_fit", default=False, type=bool, help="Git commit before training")
         parser.add_argument(
-            "--test_after_fit", default=False, type=bool, help="Run test on the best checkpoint after training"
+            "--test_after_fit", default=True, type=bool, help="Run test on the best checkpoint after training"
         )
+        parser.add_argument("--validate_every_n_steps", default=10000, type=int, help="Run validation every N steps (0 to disable)")
+        parser.add_argument("--test_every_epoch", default=False, type=bool, help="Run test after every epoch")
 
     def before_instantiate_classes(self) -> None:
         if self.config[self.subcommand].get("ignore_warnings"):
@@ -108,8 +110,17 @@ class CustomLightningCLI(LightningCLI):
                     message = version
                 os.system(f'git commit -am "{message}"')
 
+        # Setup validation interval if specified
+        validate_every_n_steps = self.config.fit.get("validate_every_n_steps", 0)
+        if validate_every_n_steps > 0:
+            self.trainer.fit_loop.epoch_loop.val_check_batch = validate_every_n_steps
+
     def after_fit(self) -> None:
         if self.config.fit.get("test_after_fit") and not os.environ.get("DEBUG", False):
+            self._run_subcommand("test")
+
+    def after_train_epoch(self) -> None:
+        if self.config.fit.get("test_every_epoch") and not os.environ.get("DEBUG", False):
             self._run_subcommand("test")
 
     def before_test(self) -> None:

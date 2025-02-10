@@ -24,6 +24,14 @@ class PasrModule(pl.LightningModule):
 
     def __init__(
         self,
+        downsample_rates: list = [2,2,4,4,5],
+        downsample_kernel_sizes: list = [4, 4, 8, 8, 11],
+        downsample_initial_channel: int = 16,
+        resblock_kernel_sizes: list = [3,7,11],
+        resblock_dilation_sizes: list = [[1,3,5], [1,3,5], [1,3,5]],
+        num_codes: int = 200,
+        upsample_initial_channel: int = 512,
+        lookahead: int = 5,
     ):
         super().__init__()
 
@@ -37,7 +45,7 @@ class PasrModule(pl.LightningModule):
         self.criterion = torch.nn.CrossEntropyLoss()
 
         # metric objects for calculating and averaging accuracy across batches
-        metric = Accuracy(task="multiclass", num_classes=10)
+        metric = Accuracy(task="multiclass", num_classes=self.hparams.num_codes)
         self.train_acc = metric.clone()
         self.val_acc = metric.clone()
         self.test_acc = metric.clone()
@@ -60,10 +68,12 @@ class PasrModule(pl.LightningModule):
         self.val_acc_best.reset()
 
     def model_step(self, batch: Any):
-        x, y = batch
+        x, y, _ = batch
+        x = x.unsqueeze(1)
+
         logits, _, _ = self.forward(x)
-        loss = self.criterion(logits.transpose(1,2), y)
-        preds = torch.argmax(logits, dim=-1)
+        loss = self.criterion(logits, y)
+        preds = torch.argmax(logits, dim=1)
         return loss, preds, y
 
     def training_step(self, batch: Any, batch_idx: int):
