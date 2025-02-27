@@ -10,7 +10,7 @@ import wandb
 
 pyrootutils.setup_root(__file__, project_root_env_var=True, dotenv=False, pythonpath=True, cwd=True)
 
-WANDB_PROJECT = "mnist"
+WANDB_PROJECT = "xarts"
 MODEL_CHECKPOINT_PATH = os.path.join("logs", "mnist")
 LOG_PATH = os.path.join("logs", "wandb")
 WHITE_LIST = [

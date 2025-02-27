@@ -43,6 +43,15 @@ class HiFiEncoder(torch.nn.Module):
 
         if h.lookahead > 0:
             self.lookahead = LookaheadBlock(h.upsample_initial_channel, h.lookahead)
+
+        if hasattr(h, "context_layer_type"):
+            if h.context_layer_type == 'transformer':
+                self.context_layer = None
+            elif h.context_layer_type == 'mamba':
+                self.context_layer = None  
+            else:
+                print("No context layer")
+    
         self.code_predictor = nn.Linear(h.upsample_initial_channel, h.num_codes)
 
 
@@ -100,6 +109,9 @@ class HiFiEncoder(torch.nn.Module):
         if hasattr(self, 'lookahead'):
             z_embed = self.lookahead(z_embed)
             # print("lookahead z_embed shape", z_embed.shape)
+
+        if hasattr(self, "context_layer"):
+            z_embed = self.context_layer(z_embed)
 
         code = self.code_predictor(z_embed.transpose(1, 2)).transpose(1, 2)
         # print("code shape", code.shape)

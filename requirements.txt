@@ -35,3 +35,4 @@ rich
 pyrootutils
 python-dotenv
 debugpy
+einops

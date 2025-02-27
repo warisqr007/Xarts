@@ -57,14 +57,14 @@ trainer:
         mode: max
         auto_insert_metric_name: false
     # https://lightning.ai/docs/pytorch/latest/api/lightning.pytorch.callbacks.EarlyStopping.html#lightning.pytorch.callbacks.EarlyStopping
-    - class_path: EarlyStopping
-      init_args:
-        monitor: val/acc
-        min_delta: 0.01
-        patience: 5
-        verbose: true
-        mode: max
-        strict: true
+    # - class_path: EarlyStopping
+    #   init_args:
+    #     monitor: val/acc
+    #     min_delta: 0.01
+    #     patience: 20
+    #     verbose: true
+    #     mode: max
+    #     strict: true
     # https://lightning.ai/docs/pytorch/latest/api/lightning.pytorch.callbacks.LearningRateMonitor.html#lightning.pytorch.callbacks.LearningRateMonitor
     - class_path: LearningRateMonitor
       init_args:
